@@ -37,3 +37,7 @@ def get_status(device_id: str):
         "status": entry["status"],
         "timestamp": entry["timestamp"]
     }
+
+@app.get("/status")
+def get_all_statuses():
+    return machine_status
