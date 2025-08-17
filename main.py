@@ -28,6 +28,10 @@ class StatusUpdate(BaseModel): #description of the data that the phone sends (sc
 def root():
     return RedirectResponse("/docs")
 
+@app.get("/health", include_in_schema=False)
+def health():
+    return {"ok": True}
+
 #POST-update data
 @app.post("/status") #If a POST request is received at /status the function will be executed.
 def update_status(data: StatusUpdate, api_key: str = Depends(verify_api_key)): #checks that it contains device_id and status.
@@ -55,5 +59,6 @@ def get_status(device_id: str, api_key: str = Depends(verify_api_key)):
 @app.get("/status")
 def get_all_statuses(api_key: str = Depends(verify_api_key)):
     return machine_status
+
 
 
