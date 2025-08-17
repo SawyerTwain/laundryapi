@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException, Depends, Header #1 - main class, 2 - to throw errors with codes, 3 and 4 - to work with the API-keys
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel #to validate and describe inputs
 from typing import Dict, Optional
 from datetime import datetime
 import os
 
-app = FastAPI(docs_url="/")
+app = FastAPI()
 
 machine_status: Dict[str, Dict] = {} #temporary storage in the ram (dictionary)
 
@@ -22,7 +23,10 @@ class StatusUpdate(BaseModel): #description of the data that the phone sends (sc
     machineId: str
     status: str  # "active", "free", "unknown"
     timestamp: Optional[int] = None 
-
+    
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse("/docs")
 
 #POST-update data
 @app.post("/status") #If a POST request is received at /status the function will be executed.
@@ -51,4 +55,5 @@ def get_status(device_id: str, api_key: str = Depends(verify_api_key)):
 @app.get("/status")
 def get_all_statuses(api_key: str = Depends(verify_api_key)):
     return machine_status
+
 
