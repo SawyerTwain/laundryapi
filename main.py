@@ -4,7 +4,7 @@ from typing import Dict, Optional
 from datetime import datetime
 import os
 
-app = FastAPI()
+app = FastAPI(docs_url="/")
 
 machine_status: Dict[str, Dict] = {} #temporary storage in the ram (dictionary)
 
@@ -51,3 +51,4 @@ def get_status(device_id: str, api_key: str = Depends(verify_api_key)):
 @app.get("/status")
 def get_all_statuses(api_key: str = Depends(verify_api_key)):
     return machine_status
+
